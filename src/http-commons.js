@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 
 const requestHandler = (request) => {
   const baseParams = `?api_key=${apiKey}&language=${defaultLanguage}`;
-  if (request.url.include("?")) {
+  if (request.url.includes("?")) {
     request.url = request.url.replace("?", baseParams + "&");
   } else {
     request.url += baseParams;

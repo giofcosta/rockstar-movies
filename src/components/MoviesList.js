@@ -8,13 +8,14 @@ const MoviesList = () => {
 
   useEffect(() => {
     retrieveMovies();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const retrieveMovies = () => {
     MoviesService.getAll({ search: searchTitle })
       .then((response) => {
-        setMovies(response.data);
-        console.log(response.data);
+        setMovies(response.data.results);
+        console.log(response.data.results);
       })
       .catch((e) => {
         console.log(e);
@@ -54,7 +55,7 @@ const MoviesList = () => {
           {movies &&
             movies.map((movie, index) => (
               <li className={"list-group-item"} key={index}>
-                {movie}
+                {movie.popularity}
               </li>
             ))}
         </ul>
