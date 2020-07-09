@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MoviesService from "../services/MoviesService";
 import { Link } from "react-router-dom";
+import NoImageIcon from "../assets/no-image-icon.png";
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]);
@@ -8,7 +9,7 @@ const MoviesList = () => {
 
   useEffect(() => {
     retrieveMovies();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const retrieveMovies = () => {
@@ -27,9 +28,17 @@ const MoviesList = () => {
     setSearchTitle(searchTitle);
   };
 
+  const MovieImage = (props) => {
+    const { path } = props;
+    const imagePath = path
+      ? `https://image.tmdb.org/t/p/w300${path}`
+      : NoImageIcon;
+    return <img src={imagePath} width="180" alt="" />;
+  };
+
   return (
     <div className="list row">
-      <div className="col-md-8">
+      <div className="col-md-12">
         <div className="input-group mb-3">
           <input
             type="text"
@@ -49,16 +58,18 @@ const MoviesList = () => {
           </div>
         </div>
       </div>
-      <div className="col-md-6">
+      <div className="col-md-12">
         <h4>Movies List</h4>
-        <ul className="list-group">
-          {movies &&
-            movies.map((movie, index) => (
-              <li className={"list-group-item"} key={index}>
-                {movie.popularity}
-              </li>
-            ))}
-        </ul>
+        <div className="container">
+          <div className="d-flex flex-wrap ">
+            {movies &&
+              movies.map((movie, index) => (
+                <div className={"p-2 flex-fill"} key={index}>
+                  <MovieImage path={movie.poster_path} />
+                </div>
+              ))}
+          </div>
+        </div>
       </div>
       {/* <div className="col-md-6">
         {currentTutorial ? (
