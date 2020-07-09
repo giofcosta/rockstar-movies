@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import MoviesService from "../services/MoviesService";
+import MovieImage from "./MovieImage";
+import StarRatings from "react-star-ratings";
 import { Link } from "react-router-dom";
-import NoImageIcon from "../assets/no-image-icon.png";
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    retrieveMovies();
+    retrieveMovies({ search: "", rating: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const retrieveMovies = () => {
-    MoviesService.getAll({ search: searchTitle })
+  const retrieveMovies = (params) => {
+    MoviesService.getAll(params)
       .then((response) => {
         setMovies(response.data.results);
         console.log(response.data.results);
@@ -23,27 +25,30 @@ const MoviesList = () => {
       });
   };
 
+  const searchMovie = () => {
+    retrieveMovies({ search: searchTitle, rating: rating });
+  };
+
+  const changeRating = (value) => {
+    let newValue = 0;
+    if (value !== rating) newValue = value;
+    setRating(newValue);
+    retrieveMovies({ search: "", rating: newValue });
+  };
+
   const onChangeSearchTitle = (e) => {
     const searchTitle = e.target.value;
     setSearchTitle(searchTitle);
   };
 
-  const MovieImage = (props) => {
-    const { path } = props;
-    const imagePath = path
-      ? `https://image.tmdb.org/t/p/w300${path}`
-      : NoImageIcon;
-    return <img src={imagePath} width="180" alt="" />;
-  };
-
   return (
     <div className="list row">
-      <div className="col-md-12">
+      <div className="col-md-9">
         <div className="input-group mb-3">
           <input
             type="text"
             className="form-control"
-            placeholder="Search by title"
+            placeholder="Find your movie..."
             value={searchTitle}
             onChange={onChangeSearchTitle}
           />
@@ -51,63 +56,43 @@ const MoviesList = () => {
             <button
               className="btn btn-outline-secondary"
               type="button"
-              onClick={retrieveMovies}
+              onClick={searchMovie}
             >
               Search
             </button>
           </div>
         </div>
       </div>
+      <div className="col-md-3">
+        <StarRatings
+          rating={rating}
+          starRatedColor="blue"
+          changeRating={changeRating}
+          numberOfStars={5}
+          name="rating"
+          starDimension="35px"
+        />
+      </div>
       <div className="col-md-12">
-        <h4>Movies List</h4>
         <div className="container">
           <div className="d-flex flex-wrap ">
             {movies &&
               movies.map((movie, index) => (
                 <div className={"p-2 flex-fill"} key={index}>
-                  <MovieImage path={movie.poster_path} />
+                  <Link
+                    to={{
+                      pathname: "/movie/" + movie.id,
+                      movie: movie,
+                    }}
+                    className="badge badge-warning"
+                  >
+                    <MovieImage path={movie.poster_path} width="180" />
+                  </Link>
                 </div>
               ))}
           </div>
         </div>
       </div>
-      {/* <div className="col-md-6">
-        {currentTutorial ? (
-          <div>
-            <h4>Tutorial</h4>
-            <div>
-              <label>
-                <strong>Title:</strong>
-              </label>{" "}
-              {currentTutorial.title}
-            </div>
-            <div>
-              <label>
-                <strong>Description:</strong>
-              </label>{" "}
-              {currentTutorial.description}
-            </div>
-            <div>
-              <label>
-                <strong>Status:</strong>
-              </label>{" "}
-              {currentTutorial.published ? "Published" : "Pending"}
-            </div>
-
-            <Link
-              to={"/tutorials/" + currentTutorial.id}
-              className="badge badge-warning"
-            >
-              Edit
-            </Link>
-          </div>
-        ) : (
-          <div>
-            <br />
-            <p>Please click on a Tutorial...</p>
-          </div>
-        )}
-      </div> */}
     </div>
   );
 };
