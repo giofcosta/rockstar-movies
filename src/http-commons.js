@@ -1,6 +1,6 @@
 import axios from "axios";
+import config from "./config";
 
-const apiKey = "d4bb7c9478289c41a0e4c98e34a5caab";
 const defaultLanguage = "en-US";
 
 const axiosInstance = axios.create({
@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 });
 
 const requestHandler = (request) => {
-  const baseParams = `?api_key=${apiKey}&language=${defaultLanguage}`;
+  const baseParams = `?api_key=${config.apiKey}&language=${defaultLanguage}`;
   if (request.url.includes("?")) {
     request.url = request.url.replace("?", baseParams + "&");
   } else {
