@@ -27,12 +27,14 @@ const Movies = (props) => {
       <MovieImage path={movie.poster_path} width="300" className="mr-5" />
       <h1>{movie.title}</h1>
       <p>
+        {movie.overview}
+        <br />
+        <br />
         <b>Date: </b> {movie.release_date}
         <br />
         <b>Popularity: </b> {movie.popularity}
         <br />
-        <br />
-        {movie.overview}
+        <b>Vote average: </b> {movie.vote_average}
       </p>
     </div>
   );

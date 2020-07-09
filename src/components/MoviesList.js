@@ -86,7 +86,7 @@ const MoviesList = () => {
                     }}
                     className="badge badge-warning"
                   >
-                    <MovieImage path={movie.poster_path} width="180" />
+                    <MovieImage path={movie.poster_path} title={movie.title} width="180" />
                   </Link>
                 </div>
               ))}
